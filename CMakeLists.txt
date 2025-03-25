@@ -10,5 +10,8 @@ find_package(RapidJSON REQUIRED)
 
 include_directories("${RapidJSON_INCLUDE_DIR}")
 
-add_executable(player src/main.cpp)
+add_executable(player 
+    src/main.cpp
+    src/Player.cpp
+)
 target_link_libraries(player PRIVATE fmt::fmt)
