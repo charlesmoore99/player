@@ -1,5 +1,6 @@
 [requires]
 fmt/10.1.1  
+rapidjson/cci.20230929
 
 [generators]
 CMakeDeps
