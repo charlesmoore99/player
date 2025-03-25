@@ -1,6 +1,8 @@
 #include <fmt/core.h>
 #include <cmath>
 #include <chrono>
+#include <atomic>
+#include <csignal>
 #include <thread>
 
 #include "rapidjson/document.h"
@@ -135,9 +137,21 @@ public:
     }
 };
 
+
+
+
+std::atomic<bool> running(true);
+
+void signalHandler(int signal) {
+    if (signal == SIGINT) {
+        fmt::print ("\nInterrupt received! Stopping...\n");
+        running = false;
+    }
+}
+
 int main()
 {
-
+    std::signal(SIGINT, signalHandler);
     try
     {
 
@@ -179,9 +193,9 @@ int main()
         // event loop to update the player location
         auto lastUpdateTime = std::chrono::high_resolution_clock::now();
 
-        double updateRate = 1;
-        for (unsigned int x = 0; x < 100; x++)
-        { // Game loop (replace with your exit condition)
+        int updateRate = 1;
+        while (running)
+        { 
             auto currentTime = std::chrono::high_resolution_clock::now();
             std::chrono::duration<double> deltaTime = currentTime - lastUpdateTime;
             lastUpdateTime = currentTime;
@@ -191,7 +205,7 @@ int main()
             p.updateDestination(hours);
 
             fmt::print("{}\n", p.toGeoJSON());
-            std::this_thread::sleep_for(std::chrono::duration<double>(1.0 / updateRate)); 
+            std::this_thread::sleep_for(std::chrono::seconds(updateRate)); 
         }
     }
     catch (const std::out_of_range &e)
