@@ -8,5 +8,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 find_package(fmt REQUIRED)
 find_package(RapidJSON REQUIRED)
 
+include_directories("${RapidJSON_INCLUDE_DIR}")
+
 add_executable(player src/main.cpp)
 target_link_libraries(player PRIVATE fmt::fmt)

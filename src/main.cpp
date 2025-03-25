@@ -3,6 +3,10 @@
 #include <chrono>
 #include <thread>
 
+#include "rapidjson/document.h"
+#include "rapidjson/writer.h"
+#include "rapidjson/stringbuffer.h"
+
 std::string getEnvString(std::string name, std::string defaultVal)
 {
     const char *valPtr = std::getenv(name.c_str());
@@ -90,6 +94,41 @@ public:
         return fmt::format("Player Name: \"{}\", Coords:({}, {}, {}), Velocity: ({}, {})", name, lat, lon, alt, bearing, kph);
     }
 
+    inline std::string toGeoJSON() {
+        rapidjson::Document document;
+        document.SetObject();
+        rapidjson::Document::AllocatorType& allocator = document.GetAllocator();
+    
+        // Feature type
+        document.AddMember("type", "Feature", allocator);
+    
+        // Geometry
+        rapidjson::Value geometry(rapidjson::kObjectType);
+        geometry.AddMember("type", "Point", allocator);
+    
+        rapidjson::Value coordinates(rapidjson::kArrayType);
+        coordinates.PushBack(lon, allocator);
+        coordinates.PushBack(lat, allocator);
+        geometry.AddMember("coordinates", coordinates, allocator);
+    
+        document.AddMember("geometry", geometry, allocator);
+    
+        // Properties
+        rapidjson::Value properties(rapidjson::kObjectType);
+        rapidjson::Value pName(name.c_str(), allocator);
+        properties.AddMember("name", pName, allocator);
+    
+        document.AddMember("properties", properties, allocator);
+    
+        // Serialize to string
+        rapidjson::StringBuffer buffer;
+        rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
+        document.Accept(writer);
+    
+        return buffer.GetString();
+    }
+    
+
     inline void updateDestination(double hours)
     {
         std::tie(lat, lon) = calculateDestination(lat, lon, bearing, kph, hours);
@@ -149,12 +188,10 @@ int main()
 
             int sec = std::chrono::duration_cast<std::chrono::nanoseconds>(deltaTime).count();
             double hours = sec / (3600.0 * 1e9);
-            fmt::print("{}\n", hours);
             p.updateDestination(hours);
 
-            fmt::print("{}\n", p.toString());
-
-            std::this_thread::sleep_for(std::chrono::duration<double>(1.0 / updateRate)); // Control update rate
+            fmt::print("{}\n", p.toGeoJSON());
+            std::this_thread::sleep_for(std::chrono::duration<double>(1.0 / updateRate)); 
         }
     }
     catch (const std::out_of_range &e)
