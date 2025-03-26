@@ -16,25 +16,29 @@ Player is a c++ program. Given a starting location, a heading, and a speed the P
 
 ## Building
 
-- Clone the player repo
-- CD into the Player directory
-- Setup conan
-- - conan profile detect --force
-- Run the conan install
-- - conan install . --output-folder=build --build=missing
+* Clone the player repo
+* CD into the Player directory
+* Setup conan
+        
+         conan profile detect --force
+* Run the conan install
+
+        conan install . --output-folder=build --build=missing
 - Setup cmake
-- - cd build
-- - cmake .. -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release
+        
+        cmake . -G "Unix Makefiles" -DCMAKE_TOOLCHAIN_FILE=build/conan_toolchain.cmake  -DCMAKE_POLICY_DEFAULT_CMP0091=NEW -DCMAKE_BUILD_TYPE=Release
 - Run the Makefile to build the Player executable
-- - make
+
+        make
 - Execute player
-- - ./player
+
+        ./player
 
 ## Operations
 
 By default,  Player starts at  39.7811° N, 84.1104° W and travels East at 150 KPH.  
 
-Initial condition is configurable by Environment variables.
+The default condition is configurable by Environment variables.
 
 | Environment Variable | Description |
 | - | - |
@@ -45,7 +49,7 @@ Initial condition is configurable by Environment variables.
 | PLAYER_BEARING_DEG | the player's direction of travel in compass degrees |
 | PLAYER_RATE | the player's rate of travel in KPH |
 
-### Example: A a batch file to specify a player's initial position/velocity
+### Example: A batch file to specify a player's initial position/velocity
 
 ```
 #!/bin/bash

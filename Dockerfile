@@ -24,7 +24,6 @@ COPY ./src /app/src
 RUN conan profile detect --force
 RUN conan install . --output-folder=build --build=missing
 RUN cmake . -G "Unix Makefiles" -DCMAKE_TOOLCHAIN_FILE=build/conan_toolchain.cmake  -DCMAKE_POLICY_DEFAULT_CMP0091=NEW -DCMAKE_BUILD_TYPE=Release
-RUN cmake .
 RUN make
 
 
