@@ -1,16 +1,16 @@
 # Player
 
-Given a starting location, a heading, and a speed the Player will 'travel' until interrupted.  Periodically, Player will output its position in the form of a GeoJSON doc.
+Player simulates a object traveling around the globe.  Given a starting location, heading, and speed the Player will 'travel' until interrupted.  Player outputs its position every second to STDOUT every second in the form of a GeoJSON doc.
 
-Player is a c++ program.  It is build using the Conan c++ package manager and the CMake build system generator.
+Player is a c++ program.  It is build using the Conan package manager and the CMake build system generator.
 
 ## Requirements
 
 - git: the version control system
 - c++: the compiler
-- make: a build tool
-- cmake: a build system generator
-- conan: a c++ package manager
+- make: the build tool
+- cmake: the build system generator
+- conan: the c++ package manager
 
 
 ## Building
@@ -72,7 +72,7 @@ export PLAYER_RATE="100.1"
 
 ## Dockerized player
 
-Player can be a packaged into a lightweight container
+Player can be a packaged into a lightweight container.
 
 ### Build the player-docker image
 
