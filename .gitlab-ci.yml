@@ -1,0 +1,59 @@
+stages:
+  - configure
+  - build
+  - package_image
+
+variables:
+  CMAKE_BUILD_TYPE: Release
+  CONAN_USER_HOME: /builds/$CI_PROJECT_PATH # Ensure Conan uses a project-specific home
+  DOCKER_IMAGE_NAME: "registry.gitlab.com/$CI_PROJECT_PATH" # Replace with your Docker image name
+  DOCKER_IMAGE_TAG: $CI_COMMIT_SHORT_SHA # Or a specific tag
+
+configure:
+  stage: configure
+  image: ubuntu:latest # Or your preferred Conan image
+  script:
+    - apt-get update && apt-get install -y cmake build-essential cmake python3 python3-pip # Install CMake if not in image
+    - pip3 install --break-system-packages conan
+    - mkdir build
+    - conan profile detect --force --out-file build/conaninfo.txt # Detect Conan profile
+    - conan install . --output-folder=build --build=missing
+    - cmake . -G "Unix Makefiles" -DCMAKE_TOOLCHAIN_FILE=build/conan_toolchain.cmake  -DCMAKE_POLICY_DEFAULT_CMP0091=NEW -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
+  artifacts:
+    paths:
+      - build/conaninfo.txt
+      - build/conan_toolchain.cmake
+    expire_in: 1 day
+
+build:
+  stage: build
+  image: ubuntu:latest # Use the same image as configure
+  dependencies:
+    - configure
+  script:
+    - apt-get update && apt-get install -y cmake build-essential cmake python3 python3-pip # Install CMake if not in image
+    - pip3 install --break-system-packages conan
+    - conan profile detect # Detect Conan profile
+    - conan install . --output-folder=build --build=missing
+    - cmake . -G "Unix Makefiles" -DCMAKE_TOOLCHAIN_FILE=build/conan_toolchain.cmake  -DCMAKE_POLICY_DEFAULT_CMP0091=NEW -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
+    - make
+  artifacts:
+    paths:
+      - player # Replace with your actual executable name
+    expire_in: 1 day
+
+package_image:
+  stage: package_image
+  image: docker:latest
+  dependencies:
+    - build
+  services:
+    - docker:dind
+  variables:
+    DOCKER_TLS_CERTDIR: "/certs" # Required for Docker in Docker on GitLab CI
+  script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY # Login to GitLab Registry
+    - docker build -t "$DOCKER_IMAGE_NAME:$DOCKER_IMAGE_TAG" .
+    - docker push "$DOCKER_IMAGE_NAME:$DOCKER_IMAGE_TAG"
+  only:
+    - master # Or your desired branch for building Docker images
