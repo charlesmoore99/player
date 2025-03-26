@@ -6,7 +6,7 @@ stages:
 variables:
   CMAKE_BUILD_TYPE: Release
   CONAN_USER_HOME: /builds/$CI_PROJECT_PATH # Ensure Conan uses a project-specific home
-  DOCKER_IMAGE_NAME: player-docker # Replace with your Docker image name
+  DOCKER_IMAGE_NAME: "registry.gitlab.com/$CI_PROJECT_PATH" # Replace with your Docker image name
   DOCKER_IMAGE_TAG: $CI_COMMIT_SHORT_SHA # Or a specific tag
 
 configure:
