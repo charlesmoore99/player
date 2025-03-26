@@ -6,19 +6,18 @@ stages:
 variables:
   CMAKE_BUILD_TYPE: Release
   CONAN_USER_HOME: /builds/$CI_PROJECT_PATH # Ensure Conan uses a project-specific home
-  DOCKER_IMAGE_NAME: your-docker-registry/your-image-name # Replace with your Docker image name
+  DOCKER_IMAGE_NAME: player-docker # Replace with your Docker image name
   DOCKER_IMAGE_TAG: $CI_COMMIT_SHORT_SHA # Or a specific tag
 
 configure:
   stage: configure
-  image: conanio/gcc11-ubuntu20.04:latest # Or your preferred Conan image
+  image: ubuntu:latest # Or your preferred Conan image
   script:
-    - apt-get update && apt-get install -y cmake  # Install CMake if not in image
-    - mkdir build
-    - cd build
+    - apt-get update && apt-get install -y cmake build-essential cmake python3 python3-pip # Install CMake if not in image
+    - pip3 install --break-system-packages conan
     - conan profile detect # Detect Conan profile
-    - conan install .. --output-folder build --build missing
-    - cmake .. -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
+    - conan install . --output-folder=build --build=missing
+    - cmake . -G "Unix Makefiles" -DCMAKE_TOOLCHAIN_FILE=build/conan_toolchain.cmake  -DCMAKE_POLICY_DEFAULT_CMP0091=NEW -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
   artifacts:
     paths:
       - build/conaninfo.txt
@@ -27,16 +26,19 @@ configure:
 
 build:
   stage: build
-  image: conanio/gcc11-ubuntu20.04:latest # Use the same image as configure
+  image: ubuntu:latest # Use the same image as configure
   dependencies:
     - configure
   script:
-    - apt-get update && apt-get install -y cmake  # Ensure CMake is present
-    - cd build
-    - cmake --build . --config ${CMAKE_BUILD_TYPE}
+    - apt-get update && apt-get install -y cmake build-essential cmake python3 python3-pip # Install CMake if not in image
+    - pip3 install --break-system-packages conan
+    - conan profile detect # Detect Conan profile
+    - conan install . --output-folder=build --build=missing
+    - cmake . -G "Unix Makefiles" -DCMAKE_TOOLCHAIN_FILE=build/conan_toolchain.cmake  -DCMAKE_POLICY_DEFAULT_CMP0091=NEW -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
+    - make
   artifacts:
     paths:
-      - build/your_executable_name # Replace with your actual executable name
+      - player # Replace with your actual executable name
     expire_in: 1 day
 
 package_image:
