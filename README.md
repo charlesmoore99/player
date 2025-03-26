@@ -1,17 +1,16 @@
 # Player
 
-Player is a c++ program. Given a starting location, a heading, and a speed the Player will travel until interrupted.  Periodically, Player will output its position in the form of a GeoJSON doc.
+Given a starting location, a heading, and a speed the Player will 'travel' until interrupted.  Periodically, Player will output its position in the form of a GeoJSON doc.
 
+Player is a c++ program.  It is build using the Conan c++ package manager and the CMake build system generator.
 
 ## Requirements
 
 - git: the version control system
 - c++: the compiler
-- make: the c++ build tool
-- cmake: a Makefile builder
-- conan: a cmake file builder
-
-
+- make: a build tool
+- cmake: a build system generator
+- conan: a c++ package manager
 
 
 ## Building
@@ -21,18 +20,23 @@ Player is a c++ program. Given a starting location, a heading, and a speed the P
 * Setup conan
         
          conan profile detect --force
+
 * Run the conan install
 
         conan install . --output-folder=build --build=missing
+
 - Setup cmake
         
         cmake . -G "Unix Makefiles" -DCMAKE_TOOLCHAIN_FILE=build/conan_toolchain.cmake  -DCMAKE_POLICY_DEFAULT_CMP0091=NEW -DCMAKE_BUILD_TYPE=Release
+
 - Run the Makefile to build the Player executable
 
         make
+
 - Execute player
 
         ./player
+
 
 ## Operations
 
