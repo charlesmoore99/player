@@ -62,3 +62,53 @@ export PLAYER_RATE="100.1"
 
 ```
 
+## Dockerized player
+
+Player can be a packaged into a lightweight container
+
+### Build the player-docker image
+
+```
+docker build -t player-docker .
+```
+
+
+### Run the player-docker image
+
+#### To start a player with default options:
+```
+docker run -t --name player player-docker
+```
+
+
+#### To start a custom player from the command line:
+```
+docker run \
+    -t \
+    --name player \
+    -e PLAYER_NAME="BUBBA" \
+    -e PLAYER_LATITUDE_DEG="21.315603" \
+    -e PLAYER_LONGITUDE_DEG="-157.858093" \
+    -e PLAYER_BEARING_DEG="0.0" \
+    player-docker
+```
+
+#### To start a custom player from with an environment file:
+1. create a file with the environment variable you want to set. 
+
+Example: the file 'player-config' 
+```
+PLAYER_NAME=Tom Sawyer
+PLAYER_LATITUDE_DEG=39.7084
+PLAYER_LONGITUDE_DEG=-91.3585
+PLAYER_ALTITUDE_DEG=0
+PLAYER_BEARING_DEG=0
+PLAYER_RATE=4
+```
+
+2. specify the config file when stargin the container
+
+Example:
+```
+docker run -t --env-file player-config player-docker
+```
