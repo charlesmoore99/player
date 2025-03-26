@@ -4,6 +4,7 @@ project(player CXX)
 # Enable C++ standard
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
+set(CMAKE_EXE_LINKER_FLAGS "-static")
 
 find_package(fmt REQUIRED)
 find_package(RapidJSON REQUIRED)
