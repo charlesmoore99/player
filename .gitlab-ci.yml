@@ -54,7 +54,7 @@ test:
     - conan install . --output-folder=build --build=missing
     - cmake . -G "Unix Makefiles" -DCMAKE_TOOLCHAIN_FILE=build/conan_toolchain.cmake  -DCMAKE_POLICY_DEFAULT_CMP0091=NEW -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
     - make
-    - test_player --reporter junit -o test-results.xml
+    - ./test_player --reporter junit -o test-results.xml
   artifacts:
     reports:
       junit: test-results.xml    
