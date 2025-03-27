@@ -1,3 +1,5 @@
+image: ubuntu:latest
+
 stages:
   - configure
   - build
@@ -12,7 +14,6 @@ variables:
 
 configure:
   stage: configure
-  image: ubuntu:latest # Or your preferred Conan image
   script:
     - apt-get update && apt-get install -y cmake build-essential cmake python3 python3-pip # Install CMake if not in image
     - pip3 install --break-system-packages conan
@@ -28,7 +29,6 @@ configure:
 
 build:
   stage: build
-  image: ubuntu:latest # Use the same image as configure
   dependencies:
     - configure
   script:
