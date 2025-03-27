@@ -40,7 +40,24 @@ build:
     - make
   artifacts:
     paths:
-      - player # Replace with your actual executable name
+      - player
+    expire_in: 1 day
+
+test:
+  stage: test
+  dependencies:
+    - build
+  script:
+    - apt-get update && apt-get install -y cmake build-essential cmake python3 python3-pip # Install CMake if not in image
+    - pip3 install --break-system-packages conan
+    - conan profile detect # Detect Conan profile
+    - conan install . --output-folder=build --build=missing
+    - cmake . -G "Unix Makefiles" -DCMAKE_TOOLCHAIN_FILE=build/conan_toolchain.cmake  -DCMAKE_POLICY_DEFAULT_CMP0091=NEW -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
+    - make
+    - test_player --reporter junit -o test-results.xml
+  artifacts:
+    reports:
+      junit: test-results.xml    
     expire_in: 1 day
 
 package_image:
