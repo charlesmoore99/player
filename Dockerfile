@@ -24,7 +24,7 @@ COPY ./tests /app/tests
 # Add your build steps here
 RUN conan profile detect --force
 RUN conan install . --build=missing
-RUN cd build
+WORKDIR /app/build
 RUN cmake .. -DCMAKE_TOOLCHAIN_FILE=Release/generators/conan_toolchain.cmake -DCMAKE_BUILD_TYPE=Release
 RUN  cmake --build .
 
