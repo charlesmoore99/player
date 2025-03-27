@@ -23,17 +23,24 @@ Player is a c++ program.  It is build using the Conan package manager and the CM
 
 * Run the conan install
 
-        conan install . --output-folder=build --build=missing
+        conan install . --build=missing
 
 - Setup cmake
+  
+        cd build
         
-        cmake . -G "Unix Makefiles" -DCMAKE_TOOLCHAIN_FILE=build/conan_toolchain.cmake  -DCMAKE_POLICY_DEFAULT_CMP0091=NEW -DCMAKE_BUILD_TYPE=Release
+        cmake .. -DCMAKE_TOOLCHAIN_FILE=Release/generators/conan_toolchain.cmake -DCMAKE_BUILD_TYPE=Release
 
-- Run the Makefile to build the Player executable
+- Run the Build to create the Player executable and Unit Tests
 
-        make
+        cmake --build .
 
-- Execute player
+
+- Run Unit Tests
+
+        ./test_player
+
+- Run player
 
         ./player
 
