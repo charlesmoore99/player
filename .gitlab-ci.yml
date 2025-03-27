@@ -19,12 +19,13 @@ configure:
     - pip3 install --break-system-packages conan
     - mkdir build
     - conan profile detect --force --out-file build/conaninfo.txt # Detect Conan profile
-    - conan install . --output-folder=build --build=missing
-    - cmake . -G "Unix Makefiles" -DCMAKE_TOOLCHAIN_FILE=build/conan_toolchain.cmake  -DCMAKE_POLICY_DEFAULT_CMP0091=NEW -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
+    - conan install . --build=missing
+    - cd build
+    - cmake .. -DCMAKE_TOOLCHAIN_FILE="Release/generators/conan_toolchain.cmake" -DCMAKE_BUILD_TYPE=Release
   artifacts:
     paths:
       - build/conaninfo.txt
-      - build/conan_toolchain.cmake
+      - build/Release/generators/conan_toolchain.cmake
     expire_in: 1 day
 
 build:
@@ -35,9 +36,10 @@ build:
     - apt-get update && apt-get install -y cmake build-essential cmake python3 python3-pip # Install CMake if not in image
     - pip3 install --break-system-packages conan
     - conan profile detect # Detect Conan profile
-    - conan install . --output-folder=build --build=missing
-    - cmake . -G "Unix Makefiles" -DCMAKE_TOOLCHAIN_FILE=build/conan_toolchain.cmake  -DCMAKE_POLICY_DEFAULT_CMP0091=NEW -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
-    - make
+    - conan install . --build=missing
+    - cd build
+    - cmake .. -DCMAKE_TOOLCHAIN_FILE="Release/generators/conan_toolchain.cmake" -DCMAKE_BUILD_TYPE=Release
+    - cmake --build .
   artifacts:
     paths:
       - player
@@ -51,9 +53,10 @@ test:
     - apt-get update && apt-get install -y cmake build-essential cmake python3 python3-pip # Install CMake if not in image
     - pip3 install --break-system-packages conan
     - conan profile detect # Detect Conan profile
-    - conan install . --output-folder=build --build=missing
-    - cmake . -G "Unix Makefiles" -DCMAKE_TOOLCHAIN_FILE=build/conan_toolchain.cmake  -DCMAKE_POLICY_DEFAULT_CMP0091=NEW -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
-    - make
+    - conan install . --build=missing
+    - cd build
+    - cmake .. -DCMAKE_TOOLCHAIN_FILE="Release/generators/conan_toolchain.cmake" -DCMAKE_BUILD_TYPE=Release
+    - cmake --build .
     - ./test_player --reporter junit -o test-results.xml
   artifacts:
     reports:
