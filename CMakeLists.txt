@@ -14,7 +14,7 @@ include_directories("${RapidJSON_INCLUDE_DIR}")
 
 # Create a library instead of an executable
 add_library(player_lib STATIC src/Player.cpp)
-#target_include_directories(player_lib PUBLIC include)
+target_include_directories(player_lib PUBLIC include)
 
 # Define the main executable
 add_executable(player src/main.cpp)
