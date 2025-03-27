@@ -11,13 +11,15 @@
 class Player
 {
 public:
-    std::string name;
-    double lat;
-    double lon;
-    double alt;
+    std::string name = "Player";
+    double lat = 0.0;
+    double lon = 0.0;
+    double alt = 0.0;
 
-    double bearing;
-    double kph;
+    double bearing = 0.0;
+    double kph = 0.0;
+
+    Player();
 
     Player(
         const std::string &playerName,
@@ -31,7 +33,7 @@ public:
 
     std::string toGeoJSON();
 
-    void updateDestination(double hours);
+    void travel(double hours);
     
 protected:
     std::tuple<double, double> calculateDestination(

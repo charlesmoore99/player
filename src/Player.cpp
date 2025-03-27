@@ -7,6 +7,8 @@
 
 #include "Player.h"
 
+Player::Player(){}
+
 Player::Player(
     const std::string &playerName,
     const double &playerLat,
@@ -59,7 +61,7 @@ std::string Player::toGeoJSON()
     return buffer.GetString();
 }
 
-void Player::updateDestination(double hours)
+void Player::travel(double hours)
 {
     std::tie(lat, lon) = calculateDestination(lat, lon, bearing, kph, hours);
 }

@@ -92,7 +92,7 @@ int main()
 
             int sec = std::chrono::duration_cast<std::chrono::nanoseconds>(deltaTime).count();
             double hours = sec / (3600.0 * 1e9);
-            p.updateDestination(hours);
+            p.travel(hours);
 
             fmt::print("{}\n", p.toGeoJSON());
             std::this_thread::sleep_for(std::chrono::seconds(updateRate)); 
