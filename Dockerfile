@@ -23,13 +23,14 @@ COPY ./tests /app/tests
 
 # Add your build steps here
 RUN conan profile detect --force
-RUN conan install . --output-folder=build --build=missing
-RUN cmake . -G "Unix Makefiles" -DCMAKE_TOOLCHAIN_FILE=build/conan_toolchain.cmake  -DCMAKE_POLICY_DEFAULT_CMP0091=NEW -DCMAKE_BUILD_TYPE=Release
-RUN make
+RUN conan install . --build=missing
+RUN cd build
+RUN cmake .. -DCMAKE_TOOLCHAIN_FILE=Release/generators/conan_toolchain.cmake -DCMAKE_BUILD_TYPE=Release
+RUN  cmake --build .
 
 
 FROM busybox:latest AS final
-COPY --from=builder /app/player /app/player
+COPY --from=builder /app/build/player /app/player
 
 WORKDIR /app
 CMD ["/app/player"]
