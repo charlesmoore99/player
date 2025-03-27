@@ -19,6 +19,7 @@ WORKDIR /app
 # Copy your project files
 COPY ./CMakeLists.txt ./conanfile.txt /app
 COPY ./src /app/src
+COPY ./tests /app/tests
 
 # Add your build steps here
 RUN conan profile detect --force
