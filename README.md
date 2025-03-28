@@ -1,10 +1,12 @@
 # Player
 
-Player simulates a object traveling around the globe.  Given a starting location, heading, and speed the Player will 'travel' until interrupted.  Every second, the Player outputs its position as a GeoJSON doc to STDOUT.
+Player simulates a object traveling around the globe.  Given a starting location, heading, and speed the Player will 'travel' until interrupted.  
 
-Player is a c++ program.  It is built using the Conan package manager and the CMake build system generator.
+The Player outputs its position as a GeoJSON doc to STDOUT every second.
 
-## Requirements
+Player is a C++ program.  It is built using the Conan package manager and the CMake build system generator.
+
+## Build Requirements
 
 - git: the version control system
 - c++: the compiler
@@ -12,10 +14,10 @@ Player is a c++ program.  It is built using the Conan package manager and the CM
 - cmake: the build system generator
 - conan: the c++ package manager
 
-### Example of an Ububtu Setup
+### Example of an Ubuntu Setup
 
-                apt install -y cmake build-essential python3 python3-pip git
-                pip3 install --break-system-packages conan
+        apt install -y cmake build-essential python3 python3-pip git
+        pip3 install --break-system-packages conan
 
 
 ## Building
@@ -40,7 +42,6 @@ Player is a c++ program.  It is built using the Conan package manager and the CM
 
         cmake --build .
 
-
 - Run Unit Tests
 
         ./test_player
@@ -54,14 +55,14 @@ Player is a c++ program.  It is built using the Conan package manager and the CM
 
 By default,  Player starts at  39.7811° N, 84.1104° W and travels East at 150 KPH.  
 
-These default conditions are configurable by Environment variables.
+Player' initial conditions are configurable by Environment variables.
 
 | Environment Variable | Description |
 | - | - |
 | PLAYER_NAME | the player's name |
-| PLAYER_LATITUDE_DEG | the player's intial latitude |
-| PLAYER_LONGITUDE_DEG | the player's initial longitude |
-| PLAYER_ALTITUDE_DEG | the player's initial altitude |
+| PLAYER_LATITUDE_DEG | the player's initial latitude in decimal degrees |
+| PLAYER_LONGITUDE_DEG | the player's initial longitude  in decimal degrees|
+| PLAYER_ALTITUDE_M | the player's altitude in meters|
 | PLAYER_BEARING_DEG | the player's direction of travel in compass degrees |
 | PLAYER_RATE | the player's rate of travel in KPH |
 
@@ -73,7 +74,7 @@ These default conditions are configurable by Environment variables.
 export PLAYER_NAME="Tom"
 export PLAYER_LATITUDE_DEG="20.3"
 export PLAYER_LONGITUDE_DEG="45.6"
-export PLAYER_ALTITUDE_DEG="78.9"
+export PLAYER_ALTITUDE_M="78.9"
 
 export PLAYER_BEARING_DEG="45.2"
 export PLAYER_RATE="100.1"
@@ -120,12 +121,12 @@ Example: the file 'player-config'
 PLAYER_NAME=Tom Sawyer
 PLAYER_LATITUDE_DEG=39.7084
 PLAYER_LONGITUDE_DEG=-91.3585
-PLAYER_ALTITUDE_DEG=0
+PLAYER_ALTITUDE_M=0
 PLAYER_BEARING_DEG=0
 PLAYER_RATE=4
 ```
 
-2. specify the config file when stargin the container
+2. specify the config file when staring the container
 
 Example:
 ```
@@ -140,5 +141,5 @@ This project comes with a .gitlab-ci.yml that will build/package the project aut
 | - | - | - |
 | BUILD | artifacts.zip: build/player | the player executable |
 | TEST | junit.xml.gz  | Results of unit tests |
-| PACKAGE-IMAGE | registry.gitlab.com/.../player | The player executable packaged in a docker image.  Accessible in the docker conatiner registry. |
+| PACKAGE-IMAGE | registry.gitlab.com/.../player | The player executable packaged in a docker image.  Accessible in the docker container registry. |
 

@@ -51,7 +51,7 @@ int main()
         // location
         double lat = getEnvDouble("PLAYER_LATITUDE_DEG", 39.7811);
         double lon = getEnvDouble("PLAYER_LONGITUDE_DEG", 84.1104);
-        double alt = getEnvDouble("PLAYER_ALTITUDE_DEG", 1251.0);
+        double alt = getEnvDouble("PLAYER_ALTITUDE_M", 1251.0);
 
         // heading & rate of travel
         double bearing = getEnvDouble("PLAYER_BEARING_DEG", 90.0);
