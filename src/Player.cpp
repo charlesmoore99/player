@@ -87,11 +87,28 @@ std::tuple<double, double> Player::calculateDestination(
     double endLat = asin(sin(beginLat) * cos(d / R) + cos(beginLat) * sin(d / R) * cos(bearing));
 
     // Calculate destination longitude
-    double endlon = beginLon + atan2(sin(bearing) * sin(d / R) * cos(beginLat), cos(d / R) - sin(beginLat) * sin(endLat));
+    double endLon = beginLon + atan2(sin(bearing) * sin(d / R) * cos(beginLat), cos(d / R) - sin(beginLat) * sin(endLat));
 
     // Convert radians back to degrees
     endLat = endLat * 180.0 / M_PI;
-    endlon = endlon * 180.0 / M_PI;
+    endLon = endLon * 180.0 / M_PI;
 
-    return {endLat, endlon};
+    // normalize the endLon
+    if (endLon > 180.0) {
+        endLon = fmod(endLon, 180.0);
+        endLon = -180.0 + endLon;
+    } else if (endLon <= -180.0) {
+        endLon = fmod(endLon, 180.0);
+        endLon = 180.0 + endLon;
+    }
+
+    // normalize the endLon
+    if (endLat > 90.0) {
+        endLat = fmod(endLat, 90.0);
+        endLat = 90.0 - endLat;
+    } else if (endLat <= -90.0) {
+        endLat = fmod(endLat, 90.0);
+        endLat = -90 - endLat;
+    }
+    return {endLat, endLon};
 }
