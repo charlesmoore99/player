@@ -1,8 +1,8 @@
 # Player
 
-Player simulates a object traveling around the globe.  Given a starting location, heading, and speed the Player will 'travel' until interrupted.  Player outputs its position every second to STDOUT every second in the form of a GeoJSON doc.
+Player simulates a object traveling around the globe.  Given a starting location, heading, and speed the Player will 'travel' until interrupted.  Every second, the Player outputs its position as a GeoJSON doc to STDOUT.
 
-Player is a c++ program.  It is build using the Conan package manager and the CMake build system generator.
+Player is a c++ program.  It is built using the Conan package manager and the CMake build system generator.
 
 ## Requirements
 
@@ -11,6 +11,11 @@ Player is a c++ program.  It is build using the Conan package manager and the CM
 - make: the build tool
 - cmake: the build system generator
 - conan: the c++ package manager
+
+### Example of an Ububtu Setup
+
+                apt install -y cmake build-essential python3 python3-pip git
+                pip3 install --break-system-packages conan
 
 
 ## Building
@@ -25,7 +30,7 @@ Player is a c++ program.  It is build using the Conan package manager and the CM
 
         conan install . --build=missing
 
-- Setup cmake
+- Setup the cmake build
   
         cd build
         
@@ -49,7 +54,7 @@ Player is a c++ program.  It is build using the Conan package manager and the CM
 
 By default,  Player starts at  39.7811° N, 84.1104° W and travels East at 150 KPH.  
 
-The default condition is configurable by Environment variables.
+These default conditions are configurable by Environment variables.
 
 | Environment Variable | Description |
 | - | - |
@@ -87,16 +92,15 @@ Player can be a packaged into a lightweight container.
 docker build -t player-docker .
 ```
 
-
 ### Run the player-docker image
 
-#### To start a player with default options:
+#### To start a player from the command line with default options:
 ```
 docker run -t --name player player-docker
 ```
 
 
-#### To start a custom player from the command line:
+#### To start a player from the command line with custom options:
 ```
 docker run \
     -t \
@@ -108,7 +112,7 @@ docker run \
     player-docker
 ```
 
-#### To start a custom player from with an environment file:
+#### To start a player from the command line with custom options specified in an environment file:
 1. create a file with the environment variable you want to set. 
 
 Example: the file 'player-config' 
@@ -127,3 +131,14 @@ Example:
 ```
 docker run -t --env-file player-config player-docker
 ```
+
+## GitLab Pipeline
+
+This project comes with a .gitlab-ci.yml that will build/package the project automatically (in Gitlab).  the following artifacts are produced:
+
+| Stage | Artifact | Description |
+| - | - | - |
+| BUILD | artifacts.zip: build/player | the player executable |
+| TEST | junit.xml.gz  | Results of unit tests |
+| PACKAGE-IMAGE | registry.gitlab.com/.../player | The player executable packaged in a docker image.  Accessible in the docker conatiner registry. |
+
