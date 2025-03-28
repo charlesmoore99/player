@@ -24,7 +24,7 @@ configure:
     - cmake .. -DCMAKE_TOOLCHAIN_FILE="Release/generators/conan_toolchain.cmake" -DCMAKE_BUILD_TYPE=Release
   artifacts:
     paths:
-      - ~/.conan2/profiles/default
+      - /root/.conan2/profiles/default
       - build/Release/generators/conan_toolchain.cmake
     expire_in: 1 day
 
@@ -42,7 +42,7 @@ build:
     - cmake --build .
   artifacts:
     paths:
-      - player
+      - build/player
     expire_in: 1 day
 
 test:
