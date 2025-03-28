@@ -60,7 +60,7 @@ test:
     - ./test_player --reporter junit -o test-results.xml
   artifacts:
     reports:
-      junit: test-results.xml    
+      junit: build/test-results.xml    
     expire_in: 1 day
 
 package_image:
