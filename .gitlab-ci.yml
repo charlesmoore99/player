@@ -5,6 +5,7 @@ stages:
   - build
   - test
   - package_image
+  - sast
 
 variables:
   CMAKE_BUILD_TYPE: Release
@@ -62,6 +63,9 @@ test:
     reports:
       junit: build/test-results.xml    
     expire_in: 1 day
+
+include:
+  - template: Security/SAST.gitlab-ci.yml
 
 package_image:
   stage: package_image
