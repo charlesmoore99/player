@@ -8,6 +8,7 @@ stages:
   - build
   - test
   - package_image
+  - tag
 
 variables:
   CMAKE_BUILD_TYPE: Release
@@ -84,3 +85,13 @@ package_image:
     - docker push "$DOCKER_IMAGE_NAME:$DOCKER_IMAGE_TAG"
   only:
     - master # Or your desired branch for building Docker images
+
+tag:
+  stage: package_image
+  script:
+    - docker pull "$DOCKER_IMAGE_NAME:$DOCKER_IMAGE_TAG"
+    - docker tag -t "$DOCKER_IMAGE_NAME:$DOCKER_IMAGE_TAG" "$DOCKER_IMAGE_NAME:latest"
+    - docker push "$DOCKER_IMAGE_NAME:latest"
+  only:
+    - master
+  needs: [package_image]
