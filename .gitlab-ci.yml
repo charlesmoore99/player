@@ -90,7 +90,7 @@ tag:
   stage: release
   image: docker:latest
   dependencies:
-    - package
+    - package_image
   services:
     - docker:dind
   variables:
