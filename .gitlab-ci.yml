@@ -7,8 +7,8 @@ stages:
   - configure
   - build
   - test
-  - package_image
-  - tag
+  - package
+  - release
 
 variables:
   CMAKE_BUILD_TYPE: Release
@@ -71,7 +71,7 @@ sast:
   stage: test
 
 package_image:
-  stage: package_image
+  stage: package
   image: docker:latest
   dependencies:
     - build
