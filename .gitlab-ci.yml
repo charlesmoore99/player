@@ -88,6 +88,13 @@ package_image:
 
 tag:
   stage: release
+  image: docker:latest
+  dependencies:
+    - package
+  services:
+    - docker:dind
+  variables:
+    DOCKER_TLS_CERTDIR: "/certs" # Required for Docker in Docker on GitLab CI
   script:
     - docker pull "$DOCKER_IMAGE_NAME:$DOCKER_IMAGE_TAG"
     - docker tag -t "$DOCKER_IMAGE_NAME:$DOCKER_IMAGE_TAG" "$DOCKER_IMAGE_NAME:latest"
