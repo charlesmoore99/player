@@ -1,11 +1,13 @@
 image: ubuntu:latest
 
+include:
+- template: Security/SAST.gitlab-ci.yml
+
 stages:
   - configure
   - build
   - test
   - package_image
-  - sast
 
 variables:
   CMAKE_BUILD_TYPE: Release
@@ -64,8 +66,8 @@ test:
       junit: build/test-results.xml    
     expire_in: 1 day
 
-include:
-  - template: Security/SAST.gitlab-ci.yml
+sast:
+  stage: test
 
 package_image:
   stage: package_image
