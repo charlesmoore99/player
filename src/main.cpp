@@ -6,6 +6,7 @@
 #include <thread>
 
 #include "Player.h"
+#include "ServicePort.h"
 
 std::string getEnvString(std::string name, std::string defaultVal)
 {
@@ -43,6 +44,7 @@ void signalHandler(int signal) {
 int main()
 {
     std::signal(SIGINT, signalHandler);
+
     try
     {
         // read vars from env
@@ -80,6 +82,9 @@ int main()
         Player p(playerName, lat, lon, alt, bearing, rate);
         fmt::print("{}\n", p.toString());
 
+        ServicePort server("localhost", 8080, p);
+        server.StartServer();
+
         // event loop to update the player location
         auto lastUpdateTime = std::chrono::high_resolution_clock::now();
 
@@ -97,6 +102,7 @@ int main()
             fmt::print("{}\n", p.toGeoJSON());
             std::this_thread::sleep_for(std::chrono::seconds(updateRate)); 
         }
+        server.StopServer();
     }
     catch (const std::out_of_range &e)
     {

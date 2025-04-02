@@ -2,6 +2,7 @@
 
 #include <fmt/core.h>
 #include <cmath>
+#include <mutex>
 
 #include "rapidjson/document.h"
 #include "rapidjson/writer.h"
@@ -40,6 +41,11 @@ public:
     std::string toString();
 
     /**
+     * returns player as a JSON string
+     */
+    std::string toJson();
+
+    /**
      * returns player as a geojons doc
      */
     std::string toGeoJSON();
@@ -55,8 +61,13 @@ public:
      * @param hours.  The fraction number of hours
      */
     void travel(double hours);
+ 
+    void updateVelocity(const std::string& velocityDoc);
 
 protected:
+    
+    std::mutex _playerMutex;
+
     /// Given a location, a velocity vector, and a time...
     /// calculate how far the player would travel in timeH at speedKPH.
     /// Then calculate where the player would be if it followed
