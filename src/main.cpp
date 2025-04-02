@@ -36,7 +36,7 @@ std::atomic<bool> running(true);
 
 void signalHandler(int signal) {
     if (signal == SIGINT) {
-        fmt::print ("\nInterrupt received! Stopping...\n");
+        fmt::println ("Interrupt received! Stopping...");
         running = false;
     }
 }
@@ -80,9 +80,9 @@ int main()
         }
 
         Player p(playerName, lat, lon, alt, bearing, rate);
-        fmt::print("{}\n", p.toString());
+        fmt::println("{}", p.toString());
 
-        ServicePort server("localhost", 8080, p);
+        ServicePort server("0.0.0.0", 8080, p);
         server.StartServer();
 
         // event loop to update the player location
@@ -99,24 +99,24 @@ int main()
             double hours = sec / (3600.0 * 1e9);
             p.travel(hours);
 
-            fmt::print("{}\n", p.toGeoJSON());
+            fmt::println("{}", p.toGeoJSON());
             std::this_thread::sleep_for(std::chrono::seconds(updateRate)); 
         }
         server.StopServer();
     }
     catch (const std::out_of_range &e)
     {
-        fmt::print("Data Validation exception caught: {} !\n", e.what());
+        fmt::println("Data Validation exception caught: {} !", e.what());
         return 1;
     }
     catch (const std::exception &e)
     {
-        fmt::print("Exception caught: {} !\n", e.what());
+        fmt::println("Exception caught: {} !", e.what());
         return 1;
     }
     catch (...)
     {
-        fmt::print("Unknown Exception caught!\n");
+        fmt::println("Unknown Exception caught!");
         return 1;
     }
     return 0;
