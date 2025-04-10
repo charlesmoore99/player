@@ -76,19 +76,19 @@ int main()
 
         if (rate < 0.0)
         {
-            throw std::out_of_range(fmt::format("Rate value ({}) is out of range.  It must be greather than or equal to 0.", bearing));
+            throw std::out_of_range(fmt::format("Rate value ({}) is out of range.  It must be greater than or equal to 0.", bearing));
         }
 
         Player p(playerName, lat, lon, alt, bearing, rate);
         fmt::println("{}", p.toString());
 
+        // start on 0.0.0.0 - 'localhost' does not work inside docker containers.
         ServicePort server("0.0.0.0", 8080, p);
         server.StartServer();
 
         // event loop to update the player location
-        auto lastUpdateTime = std::chrono::high_resolution_clock::now();
-
         int updateRate = 1;
+        auto lastUpdateTime = std::chrono::high_resolution_clock::now();
         while (running)
         { 
             auto currentTime = std::chrono::high_resolution_clock::now();
@@ -102,7 +102,6 @@ int main()
             fmt::println("{}", p.toGeoJSON());
             std::this_thread::sleep_for(std::chrono::seconds(updateRate)); 
         }
-        server.StopServer();
     }
     catch (const std::out_of_range &e)
     {
