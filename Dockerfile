@@ -30,6 +30,9 @@ RUN  cmake --build .
 
 
 FROM busybox:latest AS final
+
+EXPOSE 8080
+
 COPY --from=builder /app/build/player /app/player
 
 WORKDIR /app

@@ -6,6 +6,7 @@
 #include <thread>
 
 #include "Player.h"
+#include "ServicePort.h"
 
 std::string getEnvString(std::string name, std::string defaultVal)
 {
@@ -35,7 +36,7 @@ std::atomic<bool> running(true);
 
 void signalHandler(int signal) {
     if (signal == SIGINT) {
-        fmt::print ("\nInterrupt received! Stopping...\n");
+        fmt::println ("Interrupt received! Stopping...");
         running = false;
     }
 }
@@ -43,6 +44,7 @@ void signalHandler(int signal) {
 int main()
 {
     std::signal(SIGINT, signalHandler);
+
     try
     {
         // read vars from env
@@ -74,16 +76,19 @@ int main()
 
         if (rate < 0.0)
         {
-            throw std::out_of_range(fmt::format("Rate value ({}) is out of range.  It must be greather than or equal to 0.", bearing));
+            throw std::out_of_range(fmt::format("Rate value ({}) is out of range.  It must be greater than or equal to 0.", bearing));
         }
 
         Player p(playerName, lat, lon, alt, bearing, rate);
-        fmt::print("{}\n", p.toString());
+        fmt::println("{}", p.toString());
+
+        // start on 0.0.0.0 - 'localhost' does not work inside docker containers.
+        ServicePort server("0.0.0.0", 8080, p);
+        server.StartServer();
 
         // event loop to update the player location
-        auto lastUpdateTime = std::chrono::high_resolution_clock::now();
-
         int updateRate = 1;
+        auto lastUpdateTime = std::chrono::high_resolution_clock::now();
         while (running)
         { 
             auto currentTime = std::chrono::high_resolution_clock::now();
@@ -94,23 +99,23 @@ int main()
             double hours = sec / (3600.0 * 1e9);
             p.travel(hours);
 
-            fmt::print("{}\n", p.toGeoJSON());
+            fmt::println("{}", p.toGeoJSON());
             std::this_thread::sleep_for(std::chrono::seconds(updateRate)); 
         }
     }
     catch (const std::out_of_range &e)
     {
-        fmt::print("Data Validation exception caught: {} !\n", e.what());
+        fmt::println("Data Validation exception caught: {} !", e.what());
         return 1;
     }
     catch (const std::exception &e)
     {
-        fmt::print("Exception caught: {} !\n", e.what());
+        fmt::println("Exception caught: {} !", e.what());
         return 1;
     }
     catch (...)
     {
-        fmt::print("Unknown Exception caught!\n");
+        fmt::println("Unknown Exception caught!");
         return 1;
     }
     return 0;

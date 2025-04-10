@@ -83,6 +83,19 @@ export PLAYER_RATE="100.1"
 
 ```
 
+### The service port
+
+Player's velocity vector can be adjusted by POSTing a JSON document to port 8080.
+
+
+```
+{
+        "bearing": 181.0, 
+        "kph": 250.0 
+}
+```
+
+
 ## Dockerized player
 
 Player can be a packaged into a lightweight container.
@@ -97,7 +110,7 @@ docker build -t player-docker .
 
 #### To start a player from the command line with default options:
 ```
-docker run -t --name player player-docker
+docker run -t --name player -p 8080:8080 player-docker
 ```
 
 
@@ -110,6 +123,7 @@ docker run \
     -e PLAYER_LATITUDE_DEG="21.315603" \
     -e PLAYER_LONGITUDE_DEG="-157.858093" \
     -e PLAYER_BEARING_DEG="0.0" \
+    -p 8080:8080 \
     player-docker
 ```
 
@@ -130,7 +144,7 @@ PLAYER_RATE=4
 
 Example:
 ```
-docker run -t --env-file player-config player-docker
+docker run -t -p 8080:8080 --env-file player-config player-docker
 ```
 
 ## GitLab Pipeline
